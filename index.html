@@ -59,6 +59,11 @@
             animation: toastIn 0.3s ease-out forwards;
         }
 
+        /* Complex toast can be wider */
+        #complexToast {
+            width: 280px;
+        }
+
         /* Different importance levels */
         .info {
             background-color: #e3f2fd;
@@ -98,7 +103,7 @@
 
             /* Position below the previous element with margin */
             top: anchor(bottom);
-            left: anchor(left);
+            right: anchor(left);
 
             /* Become the new anchor for the next element */
             anchor-name: --previous-item;
@@ -172,6 +177,7 @@
         <button class="toggle-btn" popovertarget="item3">Warning Toast</button>
         <button class="toggle-btn" popovertarget="item4">Error Toast</button>
         <button class="toggle-btn" popovertarget="item5">Critical Toast</button>
+        <button class="toggle-btn" popovertarget="complexToast">Complex Toast</button>
     </div>
 
     <div class="popover-container">
@@ -199,6 +205,17 @@
         <div id="item5" popover="manual" class="toast critical">
             Critical notification
             <button class="close-btn" popovertarget="item5" popovertargetaction="hide">✕</button>
+        </div>
+
+        <div id="complexToast" popover="manual" class="toast info">
+            <h3 style="margin-top: 0; margin-bottom: 8px; font-size: 16px;">System Update Available</h3>
+            <p style="margin: 0 0 8px 0; font-size: 14px;">Version 2.5.0 is now ready to install.</p>
+            <p style="margin: 0 0 8px 0; font-size: 14px;">This update includes security patches and performance improvements.</p>
+            <div style="display: flex; gap: 8px; margin-top: 12px;">
+                <button style="padding: 6px 12px; background: #4a90e2; color: white; border: none; border-radius: 4px; cursor: pointer;">Install Now</button>
+                <button style="padding: 6px 12px; background: #eee; border: none; border-radius: 4px; cursor: pointer;">Later</button>
+            </div>
+            <button class="close-btn" popovertarget="complexToast" popovertargetaction="hide">✕</button>
         </div>
     </div>
 
