@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Popover Sequence</title>
+    <style>
+
+        :root {
+          --hue: 230; /* Starting hue, same as the screenshot */
+          --primary: oklch(70% 0.2 var(--hue)); /* Lightness 70%, Chroma 0.2, Hue from variable */
+          counter-reset: toast;
+        }
+
+
+        body {
+            font-family: system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 200vh;
+        }
+
+        .control-panel {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .toggle-btn {
+            padding: 10px 15px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Container for all popovers */
+        .popover-container {
+            /* This ensures the container doesn't interfere with positioning */
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none; /* Let clicks pass through */
+        }
+
+        /* Style for all sequence items */
+        .sequence-item {
+            padding: 1rem;
+            border: 1px solid #ccc;
+            width: 200px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative; /* For close button positioning */
+            pointer-events: auto; /* Make the item itself clickable */
+            background-color: var(--primary);
+            background-color: oklch(
+                from var(--primary)
+                l calc(70% - (counter(toast) * 5%))
+                c calc(0.2 - (counter(toast) * 0.01))
+                h calc(var(--hue) + (counter(toast) * 5))
+            ); /* This is not working ??? */
+        }
+
+
+     /* Subsequent visible items positioned relative to the previous one */
+        .sequence-item:popover-open {
+            position: absolute;
+            position-area: top span-left;
+
+            margin-top: -60px;
+
+            /* Connect to the previous element's anchor */
+            position-anchor: --previous-item;
+
+
+            /* Position below the previous element with margin */
+            top: anchor(bottom);
+            left: anchor(left);
+
+
+            /* Become the new anchor for the next element */
+            anchor-name: --previous-item;
+
+            /*counter test*/
+            counter-increment: toast;
+
+        }
+
+
+        /* Close button styling */
+        .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #ff5555;
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Make backdrop transparent and non-blocking */
+        ::backdrop {
+            background: transparent;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="control-panel">
+        <button class="toggle-btn" popovertarget="item1">Toggle Item 1</button>
+        <button class="toggle-btn" popovertarget="item2">Toggle Item 2</button>
+        <button class="toggle-btn" popovertarget="item3">Toggle Item 3</button>
+        <button class="toggle-btn" popovertarget="item4">Toggle Item 4</button>
+        <button class="toggle-btn" popovertarget="item5">Toggle Item 5</button>
+    </div>
+
+    <div class="popover-container">
+        <!-- Each item is its own popover -->
+        <div id="item1" popover="manual" class="sequence-item">
+            Item 1
+            <button class="close-btn" popovertarget="item1" popovertargetaction="hide">✕</button>
+        </div>
+
+        <div id="item2" popover="manual" class="sequence-item">
+            Item 2
+            <button class="close-btn" popovertarget="item2" popovertargetaction="hide">✕</button>
+        </div>
+
+        <div id="item3" popover="manual" class="sequence-item">
+            Item 3
+            <button class="close-btn" popovertarget="item3" popovertargetaction="hide">✕</button>
+        </div>
+
+        <div id="item4" popover="manual" class="sequence-item">
+            Item 4
+            <button class="close-btn" popovertarget="item4" popovertargetaction="hide">✕</button>
+        </div>
+
+        <div id="item5" popover="manual" class="sequence-item">
+            Item 5
+            <button class="close-btn" popovertarget="item5" popovertargetaction="hide">✕</button>
+        </div>
+    </div>
+
+    <div style="margin: 20px; padding: 20px; position: absolute; top: 100px; right: 100px; background: #eee; border-radius: 8px;">
+        <h3>Test Page Information</h3>
+        <p>This demonstrates dynamic popover stacking with anchor positioning.</p>
+        <p>Toggle items in any order to see how they stack.</p>
+    </div>
+</body>
+</html>
