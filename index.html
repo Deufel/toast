@@ -46,8 +46,8 @@
             pointer-events: none; /* Let clicks pass through */
         }
 
-        /* Style for all sequence items */
-        .sequence-item {
+        /* Style for all toast items */
+        .toast {
             padding: 1rem;
             border: 1px solid #ccc;
             width: 200px;
@@ -55,6 +55,8 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             position: relative; /* For close button positioning */
             pointer-events: auto; /* Make the item itself clickable */
+            /* Animation settings */
+            animation: toastIn 0.3s ease-out forwards;
         }
 
         /* Different importance levels */
@@ -85,7 +87,7 @@
         }
 
         /* Subsequent visible items positioned relative to the previous one */
-        .sequence-item:popover-open {
+        .toast:popover-open {
             position: absolute;
             position-area: top span-left;
 
@@ -105,6 +107,11 @@
             counter-increment: toast;
         }
 
+        /* Toast being closed */
+        .toast:popover-closing {
+            animation: toastOut 0.3s ease-in forwards;
+        }
+
         /* Close button styling */
         .close-btn {
             position: absolute;
@@ -113,14 +120,42 @@
             width: 24px;
             height: 24px;
             border-radius: 50%;
-            background-color: #ff5555;
-            color: white;
+            background-color: rgba(128, 128, 128, 0.2);
+            color: #666;
             border: none;
             font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .close-btn:hover {
+            background-color: rgba(128, 128, 128, 0.4);
+        }
+
+        /* Entry and exit animations */
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes toastOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
         }
 
         /* Make backdrop transparent and non-blocking */
@@ -141,27 +176,27 @@
 
     <div class="popover-container">
         <!-- Each item is its own popover with a different importance level -->
-        <div id="item1" popover="manual" class="sequence-item info">
+        <div id="item1" popover="manual" class="toast info">
             Info notification
             <button class="close-btn" popovertarget="item1" popovertargetaction="hide">✕</button>
         </div>
 
-        <div id="item2" popover="manual" class="sequence-item success">
+        <div id="item2" popover="manual" class="toast success">
             Success notification
             <button class="close-btn" popovertarget="item2" popovertargetaction="hide">✕</button>
         </div>
 
-        <div id="item3" popover="manual" class="sequence-item warning">
+        <div id="item3" popover="manual" class="toast warning">
             Warning notification
             <button class="close-btn" popovertarget="item3" popovertargetaction="hide">✕</button>
         </div>
 
-        <div id="item4" popover="manual" class="sequence-item error">
+        <div id="item4" popover="manual" class="toast error">
             Error notification
             <button class="close-btn" popovertarget="item4" popovertargetaction="hide">✕</button>
         </div>
 
-        <div id="item5" popover="manual" class="sequence-item critical">
+        <div id="item5" popover="manual" class="toast critical">
             Critical notification
             <button class="close-btn" popovertarget="item5" popovertargetaction="hide">✕</button>
         </div>
