@@ -32,36 +32,37 @@ Requires browsers that support the HTML Popover API and CSS anchor positioning.
 
 ```css
 /* Subsequent visible items positioned relative to the previous one */
-.toast:popover-open {
-    position: absolute;
-    position-area: top span-left;
+    .toast:popover-open {
+           position: absolute;
+           position-area: top span-left;
 
-    margin-top: -60px;
+           margin-left: 1rem;
+           margin-bottom: 1rem;
 
-    /* Connect to the previous element's anchor */
-    position-anchor: --previous-item;
+           /* Connect to the previous element's anchor */
+           position-anchor: --previous-item;
 
-    /* Position below the previous element with margin */
-    top: anchor(bottom);
-    right: anchor(left);
+           /* Position below the previous element with margin */
+           top: anchor(bottom);
+           right: anchor(left);
 
-    /* Become the new anchor for the next element */
-    anchor-name: --previous-item;
+           /* Become the new anchor for the next element */
+           anchor-name: --previous-item;
 
-    /*counter test*/
-    counter-increment: toast;
-}
+           /*counter test*/
+           counter-increment: toast;
+       }
 
-.toast::before {
-    content: counter(toast);
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: var(--primary);
-    color: white;
-    padding: 2px 4px;
-    border-radius: 4px 0 0 0;
-    font-size: 12px;
-}
+       .toast::before {
+           content: counter(toast);
+           position: absolute;
+           top: 0;
+           left: 0;
+           background: var(--primary);
+           color: white;
+           padding: 2px 4px;
+           border-radius: 4px 0 0 0;
+           font-size: 12px;
+       }
 
 ```
