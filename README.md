@@ -66,3 +66,6 @@ Requires browsers that support the HTML Popover API and CSS anchor positioning.
        }
 
 ```
+
+<img width="571" alt="Screenshot 2025-03-21 at 9 13 22 PM" src="https://github.com/user-attachments/assets/8f744570-33f1-4dbc-8086-fd5e3afd1781" />
+
