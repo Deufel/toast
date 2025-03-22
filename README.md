@@ -11,7 +11,7 @@ Investigating a class based toast system using the HTML Popover API + Anchor CSS
 ## Usage
 
 1. Click any button in the control panel to display a notification
-2. Notifications stack in sequence from top-right
+2. Notifications stack in sequence from bottom-left (can change this easily)
 3. Close with the "✕" button or toggle with the same control button
 
 ## Known Issues
