@@ -17,6 +17,7 @@ Investigating a class based toast system using the HTML Popover API + Anchor CSS
 ## Known Issues
 - no stacking on mobile ?? or safari 
 - the css indexing get out of order (but the total is still correct)
+- No exit animation 
 
 ## Technical Notes
 
