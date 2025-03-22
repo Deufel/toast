@@ -1,12 +1,9 @@
-# Toast Notification System
+# Toast Notifications Testing
 
 Investigating a class based toast system using the HTML Popover API + Anchor CSS positioning.
-A lightweight, CSS-based toast notification system using the HTML Popover API.
 
 ## Features
 
-- Five notification types: Info, Success, Warning, Error, and Critical
-- Complex toast with customizable content and actions
 - Automatic positioning with CSS anchor positioning
 - Simple open/close animations
 - No JavaScript required for core functionality
@@ -17,54 +14,48 @@ A lightweight, CSS-based toast notification system using the HTML Popover API.
 2. Notifications stack in sequence from top-right
 3. Close with the "✕" button or toggle with the same control button
 
+## Known Issues
+- no stacking on mobile ?? or safari 
+- the css indexing get out of order (but the total is still correct)
+
 ## Technical Notes
 
-This implementation uses modern CSS features:
-- HTML Popover API for managing toast state
-- CSS anchor positioning for dynamic placement
-- CSS animations for smooth transitions
+The key to this working is the sequence in which CSS properties are processed and applied. The CSS engine processes declarations in the following order:
 
-## Browser Support
+First, the element reads the existing --previous-item anchor in the DOM (if one exists)
+Then, it positions itself relative to that anchor using position-anchor: --previous-item, top: anchor(bottom), etc.
+Finally, it sets itself as the new --previous-item with anchor-name: --previous-item
+
+This creates a chain where:
+
+The first popover that opens doesn't find a --previous-item anchor, so it positions itself at the default location
+When the second popover opens, it anchors to the first one (which now has the --previous-item name)
+Then the second popover becomes the new --previous-item
+And so on for subsequent popovers
+
+This works because the property values are computed in a single pass before being applied to the layout. The element reads the current state of the DOM for positioning itself, and only after that does it update its own anchor name.
+
+### Browser Support
 
 Requires browsers that support the HTML Popover API and CSS anchor positioning.
 
 ## Relevant CSS
 
 ```css
-/* Subsequent visible items positioned relative to the previous one */
-    .toast:popover-open {
-           position: absolute;
-           position-area: top span-left;
-
-           margin-left: 1rem;
-           margin-bottom: 1rem;
-
-           /* Connect to the previous element's anchor */
-           position-anchor: --previous-item;
-
-           /* Position below the previous element with margin */
-           top: anchor(bottom);
-           right: anchor(left);
-
-           /* Become the new anchor for the next element */
-           anchor-name: --previous-item;
-
-           /*counter test*/
-           counter-increment: toast;
-       }
-
-       .toast::before {
-           content: counter(toast);
-           position: absolute;
-           top: 0;
-           left: 0;
-           background: var(--primary);
-           color: white;
-           padding: 2px 4px;
-           border-radius: 4px 0 0 0;
-           font-size: 12px;
-       }
-
+.toast:popover-open {
+    position: absolute;
+    position-area: top span-left;
+    
+    /* Connect to the previous element's anchor */
+    position-anchor: --previous-item;
+    
+    /* Position below the previous element with margin */
+    top: anchor(bottom);
+    right: anchor(left);
+    
+    /* Become the new anchor for the next element */
+    anchor-name: --previous-item;
+}
 ```
 
 <img width="571" alt="Screenshot 2025-03-21 at 9 13 22 PM" src="https://github.com/user-attachments/assets/8f744570-33f1-4dbc-8086-fd5e3afd1781" />
