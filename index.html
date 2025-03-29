@@ -6,9 +6,13 @@
     <title>Dynamic Popover Sequence</title>
     <style>
         :root {
-          --hue: 230; /* Starting hue, same as the screenshot */
-          --primary: oklch(70% 0.2 var(--hue)); /* Lightness 70%, Chroma 0.2, Hue from variable */
-/*           counter-reset: toast; */
+          --hue: 230;
+          --primary: oklch(70% 0.2 var(--hue)); 
+        }
+        
+        /* Add a global counter for all open popovers */
+        :root::view-transition {
+          counter-reset: toast-visible 0;
         }
 
         body {
@@ -59,6 +63,8 @@
             animation: toastIn 0.3s ease-out forwards;
         }
 
+        
+
         /* Complex toast can be wider */
         #complexToast {
             width: 280px;
@@ -93,9 +99,6 @@
 
         /* Subsequent visible items positioned relative to the previous one */
         .toast:popover-open {
-            /*counter test*/
-            counter-increment: toast 1;
-            
             position: absolute;
             position-area: top span-left;
 
@@ -111,20 +114,26 @@
 
             /* Become the new anchor for the next element */
             anchor-name: --previous-item;
-
         }
 
-        .toast::before {
-            content: counter(toast);
-            position: absolute;
-            top: 0;
-            left: 0;
-            background: var(--primary);
-            color: white;
-            padding: 2px 4px;
-            border-radius: 4px 0 0 0;
-            font-size: 12px;
+        /* Create a special counter for visible toasts only */
+        html:has(.toast:popover-open) {
+          counter-reset: toast-visible;
         }
+
+        .toast:popover-open::before {
+          counter-increment: toast-visible;
+          content: counter(toast-visible);
+          position: absolute;
+          top: 0;
+          left: 0;
+          background: var(--primary);
+          color: white;
+          padding: 2px 4px;
+          border-radius: 4px 0 0 0;
+          font-size: 12px;
+        }
+
 
         /* Toast being closed */
         .toast:popover-closing {
