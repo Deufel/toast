@@ -8,7 +8,7 @@
         :root {
           --hue: 230; /* Starting hue, same as the screenshot */
           --primary: oklch(70% 0.2 var(--hue)); /* Lightness 70%, Chroma 0.2, Hue from variable */
-          counter-reset: toast;
+/*           counter-reset: toast; */
         }
 
         body {
@@ -43,6 +43,7 @@
             top: 0;
             left: 0;
             pointer-events: none; /* Let clicks pass through */
+            counter-reset: toast 0; /* Reset counter here instead of in :root */
         }
 
         /* Style for all toast items */
@@ -92,6 +93,9 @@
 
         /* Subsequent visible items positioned relative to the previous one */
         .toast:popover-open {
+            /*counter test*/
+            counter-increment: toast 1;
+            
             position: absolute;
             position-area: top span-left;
 
@@ -108,8 +112,6 @@
             /* Become the new anchor for the next element */
             anchor-name: --previous-item;
 
-            /*counter test*/
-            counter-increment: toast;
         }
 
         .toast::before {
