@@ -6,13 +6,9 @@
     <title>Dynamic Popover Sequence</title>
     <style>
         :root {
-          --hue: 230;
-          --primary: oklch(70% 0.2 var(--hue)); 
-        }
-        
-        /* Add a global counter for all open popovers */
-        :root::view-transition {
-          counter-reset: toast-visible 0;
+          --hue: 230; /* Starting hue, same as the screenshot */
+          --primary: oklch(70% 0.2 var(--hue)); /* Lightness 70%, Chroma 0.2, Hue from variable */
+          counter-reset: toast;
         }
 
         body {
@@ -46,10 +42,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            
-            /* Initialize the counter anchor */
-            anchor-name: --toast-counter;
-            --toast-count: 0; /* Start with 0 */
+            pointer-events: none; /* Let clicks pass through */
         }
 
         /* Style for all toast items */
@@ -64,8 +57,6 @@
             /* Animation settings */
             animation: toastIn 0.3s ease-out forwards;
         }
-
-        
 
         /* Complex toast can be wider */
         #complexToast {
@@ -100,40 +91,37 @@
         }
 
         /* Subsequent visible items positioned relative to the previous one */
-        /* Make each open toast read the current counter and increment it */
         .toast:popover-open {
-          position: absolute;
-          position-area: top span-left;
-          margin-left: 1rem;
-          margin-bottom: 1rem;
-          position-anchor: --previous-item;
-          top: anchor(bottom);
-          right: anchor(left);
-          anchor-name: --previous-item;
-          
-          /* Get the current count from the container */
-          --my-count: calc(var(--toast-count, 0) + 1);
-          
-          /* And update the global counter for the next toast */
-          anchor-default: --toast-counter --toast-count var(--my-count);
+            position: absolute;
+            position-area: top span-left;
+
+            margin-left: 1rem;
+            margin-bottom: 1rem;
+
+            /* Connect to the previous element's anchor */
+            position-anchor: --previous-item;
+
+            /* Position below the previous element with margin */
+            top: anchor(bottom);
+            right: anchor(left);
+
+            /* Become the new anchor for the next element */
+            anchor-name: --previous-item;
+
+            /*counter test*/
+            counter-increment: toast;
         }
 
-        /* Create a special counter for visible toasts only */
-        html:has(.toast:popover-open) {
-          counter-reset: toast-visible;
-        }
-
-        /* Display the counter value in the ::before pseudo-element */
-        .toast:popover-open::before {
-          content: var(--my-count);
-          position: absolute;
-          top: 0;
-          left: 0;
-          background: var(--primary);
-          color: white;
-          padding: 2px 4px;
-          border-radius: 4px 0 0 0;
-          font-size: 12px;
+        .toast::before {
+            content: counter(toast);
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: var(--primary);
+            color: white;
+            padding: 2px 4px;
+            border-radius: 4px 0 0 0;
+            font-size: 12px;
         }
 
         /* Toast being closed */
