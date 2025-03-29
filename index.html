@@ -46,8 +46,10 @@
             position: fixed;
             top: 0;
             left: 0;
-            pointer-events: none; /* Let clicks pass through */
-            counter-reset: toast 0; /* Reset counter here instead of in :root */
+            
+            /* Initialize the counter anchor */
+            anchor-name: --toast-counter;
+            --toast-count: 0; /* Start with 0 */
         }
 
         /* Style for all toast items */
@@ -98,22 +100,22 @@
         }
 
         /* Subsequent visible items positioned relative to the previous one */
+        /* Make each open toast read the current counter and increment it */
         .toast:popover-open {
-            position: absolute;
-            position-area: top span-left;
-
-            margin-left: 1rem;
-            margin-bottom: 1rem;
-
-            /* Connect to the previous element's anchor */
-            position-anchor: --previous-item;
-
-            /* Position below the previous element with margin */
-            top: anchor(bottom);
-            right: anchor(left);
-
-            /* Become the new anchor for the next element */
-            anchor-name: --previous-item;
+          position: absolute;
+          position-area: top span-left;
+          margin-left: 1rem;
+          margin-bottom: 1rem;
+          position-anchor: --previous-item;
+          top: anchor(bottom);
+          right: anchor(left);
+          anchor-name: --previous-item;
+          
+          /* Get the current count from the container */
+          --my-count: calc(var(--toast-count, 0) + 1);
+          
+          /* And update the global counter for the next toast */
+          anchor-default: --toast-counter --toast-count var(--my-count);
         }
 
         /* Create a special counter for visible toasts only */
@@ -121,9 +123,9 @@
           counter-reset: toast-visible;
         }
 
+        /* Display the counter value in the ::before pseudo-element */
         .toast:popover-open::before {
-          counter-increment: toast-visible;
-          content: counter(toast-visible);
+          content: var(--my-count);
           position: absolute;
           top: 0;
           left: 0;
@@ -133,7 +135,6 @@
           border-radius: 4px 0 0 0;
           font-size: 12px;
         }
-
 
         /* Toast being closed */
         .toast:popover-closing {
